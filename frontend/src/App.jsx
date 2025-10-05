@@ -21,6 +21,7 @@ import ScrollToTopButton from './components/ScrollToTopButton'
 import FontSizeControl from './components/FontSizeControl'
 import ProjectInfo from './components/ProjectInfo'
 import Footer from './components/Footer'
+import ThemeToggle from './components/ThemeToggle'
 
 function App() {
   const { language, toggleLanguage } = useLanguage()
@@ -179,45 +180,48 @@ function App() {
   }
 
   return (
-    <div className="bg-gray-900 text-white relative overflow-hidden">
+    <div className="bg-orange-50 dark:bg-gray-900 text-gray-900 dark:text-white relative overflow-hidden transition-colors duration-300">
       
       {/* Controls Bar - Top Right */}
       <div className="fixed top-4 right-4 z-50 flex gap-3">
+        {/* Theme Toggle */}
+        <ThemeToggle />
+        
         {/* Font Size Control */}
         <FontSizeControl />
         
         {/* Language Toggle Button */}
         <button
           onClick={toggleLanguage}
-          className="px-4 py-2 border-2 border-cyan-400 bg-gray-800/80 backdrop-blur-sm rounded-lg text-cyan-400 font-mono text-sm hover:bg-cyan-400/20 hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] transition-all uppercase font-bold"
+          className="px-4 py-2 border-2 border-amber-500 dark:border-cyan-400 bg-amber-100 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg text-amber-700 dark:text-cyan-400 font-mono text-sm hover:bg-amber-200 dark:hover:bg-cyan-400/20 hover:shadow-lg dark:hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] transition-all uppercase font-bold"
         >
           {language === 'es' ? 'EN' : 'ES'}
         </button>
       </div>
 
-      {/* Progress Bar - Cyberpunk style */}
-      <div className="fixed top-0 left-0 w-full h-0.5 bg-gray-800 z-50">
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-0.5 bg-orange-200 dark:bg-gray-800 z-50">
         <div 
-          className="h-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 shadow-[0_0_10px_rgba(0,255,255,0.8)]"
+          className="h-full bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 dark:from-cyan-400 dark:via-purple-500 dark:to-pink-500 shadow-lg dark:shadow-[0_0_10px_rgba(0,255,255,0.8)]"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
 
       {/* Animated gradient overlay */}
       <div 
-        className="fixed inset-0 pointer-events-none opacity-10"
+        className="fixed inset-0 pointer-events-none opacity-5 dark:opacity-10"
         style={{
-          background: `radial-gradient(circle at 50% ${scrollProgress}%, rgba(0, 255, 255, 0.3) 0%, transparent 70%)`
+          background: `radial-gradient(circle at 50% ${scrollProgress}%, rgba(251, 146, 60, 0.2) 0%, transparent 70%)`
         }}
       />
 
-      {/* Decorative tech elements */}
+      {/* Decorative elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Circuit lines */}
-        <div className="absolute top-20 left-10 w-64 h-64 border-2 border-cyan-400/20" 
+        {/* Decorative shapes */}
+        <div className="absolute top-20 left-10 w-64 h-64 border-2 border-orange-300/20 dark:border-cyan-400/20" 
              style={{ transform: `rotate(${scrollProgress * 0.5}deg)` }}>
-          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-pink-500/50 to-transparent"></div>
+          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-orange-400/50 dark:via-cyan-400/50 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-red-400/50 dark:via-pink-500/50 to-transparent"></div>
         </div>
         
         {/* Weather icons - Cloud */}
@@ -295,57 +299,63 @@ function App() {
             />
           </div>
 
-          {/* Submit Button */}
-          {selectedDate && selectedHour && location && (
-            <div ref={submitRef} className="space-y-8">
-
-              {/* Summary Card */}
-              <div className="relative border border-purple-500/30 p-8 bg-gray-800/50 backdrop-blur-sm"
-                   style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
-                <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-purple-500"></div>
-                <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-purple-500"></div>
-                
-                <h3 className="text-2xl font-bold text-purple-400 mb-6 uppercase tracking-wide font-mono">
-                  // Resumen de Consulta
-                </h3>
-                
-                <div className="space-y-4 font-mono">
-                  <div className="flex items-center gap-3">
-                    <span className="text-cyan-400">📅 Fecha:</span>
-                    <span className="text-white font-bold">{selectedDate}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-pink-500">⏰ Hora:</span>
-                    <span className="text-white font-bold">{selectedHour}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-purple-400">📍 Ubicación:</span>
-                    <span className="text-white font-bold">{location}</span>
+          {/* Submit Button Section */}
+          <div ref={submitRef} className="space-y-8">
+            {selectedDate && selectedHour && location && (
+              <>
+                {/* Summary Card */}
+                <div className="relative border-2 border-purple-300 dark:border-purple-500/30 p-8 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm"
+                     style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
+                  <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-purple-500 dark:border-purple-500"></div>
+                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-purple-500 dark:border-purple-500"></div>
+                  
+                  <h3 className="text-2xl font-bold text-purple-700 dark:text-purple-400 mb-6 uppercase tracking-wide font-mono">
+                    // Resumen de Consulta
+                  </h3>
+                  
+                  <div className="space-y-4 font-mono">
+                    <div className="flex items-center gap-3">
+                      <span className="text-orange-700 dark:text-cyan-400">📅 Fecha:</span>
+                      <span className="text-gray-900 dark:text-white font-bold">{selectedDate}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-red-700 dark:text-pink-500">⏰ Hora:</span>
+                      <span className="text-gray-900 dark:text-white font-bold">{selectedHour}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-purple-700 dark:text-purple-400">📍 Ubicación:</span>
+                      <span className="text-gray-900 dark:text-white font-bold">{location}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
+            )}
 
-              {/* Submit Button */}
-              <button
-                onClick={handleSubmitQuery}
-                disabled={isSubmitting}
-                className="w-full relative border-2 border-cyan-400 bg-gradient-to-r from-cyan-500/20 to-pink-500/20 py-6 text-cyan-400 hover:from-cyan-500/30 hover:to-pink-500/30 hover:shadow-[0_0_30px_rgba(0,255,255,0.5)] transition-all font-mono text-2xl uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)' }}
-              >
-                {isSubmitting ? (
-                  <>
-                    <span className="mr-3">⏳</span>
-                    Enviando consulta...
-                  </>
-                ) : (
-                  <>
-                    <span className="mr-3">🚀</span>
-                    Enviar Consulta
-                  </>
-                )}
-              </button>
-            </div>
-          )}
+            {/* Submit Button - Siempre visible */}
+            <button
+              onClick={handleSubmitQuery}
+              disabled={isSubmitting || !selectedDate || !selectedHour || !location}
+              className="w-full relative border-2 border-orange-500 dark:border-cyan-400 bg-gradient-to-r from-orange-200 to-red-200 dark:from-cyan-500/20 dark:to-pink-500/20 py-6 text-orange-800 dark:text-cyan-400 hover:from-orange-300 hover:to-red-300 dark:hover:from-cyan-500/30 dark:hover:to-pink-500/30 hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(0,255,255,0.5)] transition-all font-mono text-2xl uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+              style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)' }}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="mr-3">⏳</span>
+                  Enviando consulta...
+                </>
+              ) : !selectedDate || !selectedHour || !location ? (
+                <>
+                  <span className="mr-3">⚠️</span>
+                  Completa todos los campos
+                </>
+              ) : (
+                <>
+                  <span className="mr-3">🚀</span>
+                  Enviar Consulta
+                </>
+              )}
+            </button>
+          </div>
 
           {/* Results Panel */}
           <div ref={resultsRef}>

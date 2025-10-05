@@ -15,30 +15,30 @@ function CategoriesSection() {
   return (
     <div className="space-y-10">
       <div className="text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 uppercase tracking-tight mb-2"
-            style={{ textShadow: '0 0 20px rgba(0, 255, 255, 0.3)' }}>
+        <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-700 to-red-700 dark:from-cyan-400 dark:to-pink-500 uppercase tracking-tight mb-2 drop-shadow-md"
+            style={{ textShadow: '0 0 20px rgba(251, 146, 60, 0.2)' }}>
           {t('detectionMatrix')}
         </h2>
         <div className="flex items-center justify-center gap-2 mt-4">
-          <div className="h-px w-12 bg-cyan-400"></div>
-          <p className="text-xs text-cyan-400 uppercase tracking-widest font-mono">
+          <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
+          <p className="text-xs text-orange-700 dark:text-cyan-400 uppercase tracking-widest font-mono">
             {t('conditionCategories')}
           </p>
-          <div className="h-px w-12 bg-cyan-400"></div>
+          <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {categories.map(({ icon, titleKey, color, border, glow }) => (
-          <div key={titleKey} className={`relative border ${border} p-5 bg-gray-800/50 backdrop-blur-sm ${glow} transition-all duration-300 group cursor-pointer`}
+          <div key={titleKey} className={`relative border-2 ${border} p-5 bg-white dark:bg-gray-800/50 shadow-md dark:shadow-none backdrop-blur-sm hover:shadow-xl dark:${glow} transition-all duration-300 group cursor-pointer`}
                style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}>
-            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-400"></div>
-            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-pink-500"></div>
+            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-orange-500 dark:border-cyan-400"></div>
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-red-500 dark:border-pink-500"></div>
             
             <div className={`text-3xl font-bold text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r ${color} font-mono tracking-tighter`}>
               {icon}
             </div>
-            <div className="text-xs text-gray-400 text-center uppercase tracking-wide font-mono">
+            <div className="text-xs text-gray-700 dark:text-gray-400 text-center uppercase tracking-wide font-mono font-semibold">
               {t(titleKey)}
             </div>
           </div>
@@ -46,7 +46,7 @@ function CategoriesSection() {
       </div>
 
       <div className="text-center">
-        <p className="text-xs text-cyan-400 uppercase tracking-widest font-mono animate-pulse">
+        <p className="text-xs text-orange-700 dark:text-cyan-400 uppercase tracking-widest font-mono animate-pulse">
           {t('scroll')}
         </p>
       </div>

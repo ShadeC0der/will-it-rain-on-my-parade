@@ -40,29 +40,29 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
     <div id="date-time-section" className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 uppercase tracking-tight mb-2"
-            style={{ textShadow: '0 0 20px rgba(0, 255, 255, 0.3)' }}>
+        <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-700 to-red-700 dark:from-cyan-400 dark:to-pink-500 uppercase tracking-tight mb-2 drop-shadow-md"
+            style={{ textShadow: '0 0 20px rgba(251, 146, 60, 0.2)' }}>
           {t('selectDateTime')}
         </h2>
         <div className="flex items-center justify-center gap-2 mt-4">
-          <div className="h-px w-12 bg-cyan-400"></div>
-          <p className="text-xs text-cyan-400 uppercase tracking-widest font-mono">
+          <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
+          <p className="text-xs text-orange-700 dark:text-cyan-400 uppercase tracking-widest font-mono">
             {t('dateTimeText')}
           </p>
-          <div className="h-px w-12 bg-cyan-400"></div>
+          <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
         </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Date Picker */}
-        <div className="relative border border-cyan-400/30 p-6 bg-gray-800/50 backdrop-blur-sm hover:border-cyan-400 transition-all group"
+        <div className="relative border-2 border-orange-300 dark:border-cyan-400/30 p-6 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm hover:border-orange-500 dark:hover:border-cyan-400 hover:shadow-xl transition-all group"
              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
-          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-cyan-400"></div>
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-cyan-400"></div>
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-orange-500 dark:border-cyan-400"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-orange-500 dark:border-cyan-400"></div>
           
           <div className="flex items-center gap-3 mb-4">
             <div className="text-3xl">📅</div>
-            <h3 className="text-xl font-bold text-cyan-400 uppercase tracking-wide font-mono">
+            <h3 className="text-xl font-bold text-orange-700 dark:text-cyan-400 uppercase tracking-wide font-mono">
               {t('defineDate')}
             </h3>
           </div>
@@ -71,11 +71,11 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-full bg-gray-900/80 border border-cyan-400/30 rounded px-4 py-3 text-white text-lg font-mono focus:border-cyan-400 focus:outline-none focus:shadow-[0_0_10px_rgba(0,255,255,0.3)] transition-all"
+            className="w-full bg-orange-50 dark:bg-gray-900/80 border-2 border-orange-300 dark:border-cyan-400/30 rounded px-4 py-3 text-gray-900 dark:text-white text-lg font-mono focus:border-orange-500 dark:focus:border-cyan-400 focus:outline-none focus:shadow-lg dark:focus:shadow-[0_0_10px_rgba(0,255,255,0.3)] transition-all"
           />
           
           {selectedDate && (
-            <div className="mt-3 text-base text-cyan-300 font-mono">
+            <div className="mt-3 text-base text-orange-700 dark:text-cyan-300 font-mono font-semibold">
               ✓ {new Date(selectedDate + 'T00:00:00').toLocaleDateString('es-ES', { 
                 weekday: 'long', 
                 year: 'numeric', 
@@ -87,14 +87,14 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
         </div>
 
         {/* Time Picker */}
-        <div className="relative border border-pink-500/30 p-6 bg-gray-800/50 backdrop-blur-sm hover:border-pink-500 transition-all group"
+        <div className="relative border-2 border-amber-300 dark:border-pink-500/30 p-6 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm hover:border-amber-500 dark:hover:border-pink-500 hover:shadow-xl transition-all group"
              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
-          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-pink-500"></div>
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-pink-500"></div>
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-amber-500 dark:border-pink-500"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-amber-500 dark:border-pink-500"></div>
           
           <div className="flex items-center gap-3 mb-4">
             <div className="text-3xl">⏰</div>
-            <h3 className="text-xl font-bold text-pink-500 uppercase tracking-wide font-mono">
+            <h3 className="text-xl font-bold text-amber-700 dark:text-pink-500 uppercase tracking-wide font-mono">
               {t('defineTime')}
             </h3>
           </div>
@@ -107,7 +107,7 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
                 setHour12(e.target.value)
                 handleTimeChange(e.target.value, minutes, period)
               }}
-              className="bg-gray-900/80 border border-pink-500/30 rounded px-6 py-4 text-white text-2xl font-mono focus:border-pink-500 focus:outline-none focus:shadow-[0_0_10px_rgba(255,0,255,0.3)] transition-all cursor-pointer"
+              className="bg-amber-50 dark:bg-gray-900/80 border-2 border-amber-300 dark:border-pink-500/30 rounded px-6 py-4 text-gray-900 dark:text-white text-2xl font-mono focus:border-amber-500 dark:focus:border-pink-500 focus:outline-none focus:shadow-lg dark:focus:shadow-[0_0_10px_rgba(255,0,255,0.3)] transition-all cursor-pointer"
             >
               {[...Array(12)].map((_, i) => {
                 const h = i + 1
@@ -115,7 +115,7 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
               })}
             </select>
             
-            <span className="text-3xl text-pink-400 font-mono">:</span>
+            <span className="text-3xl text-amber-600 dark:text-pink-400 font-mono">:</span>
             
             {/* Minutes selector */}
             <select
@@ -124,7 +124,7 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
                 setMinutes(e.target.value)
                 handleTimeChange(hour12, e.target.value, period)
               }}
-              className="bg-gray-900/80 border border-pink-500/30 rounded px-6 py-4 text-white text-2xl font-mono focus:border-pink-500 focus:outline-none focus:shadow-[0_0_10px_rgba(255,0,255,0.3)] transition-all cursor-pointer"
+              className="bg-amber-50 dark:bg-gray-900/80 border-2 border-amber-300 dark:border-pink-500/30 rounded px-6 py-4 text-gray-900 dark:text-white text-2xl font-mono focus:border-amber-500 dark:focus:border-pink-500 focus:outline-none focus:shadow-lg dark:focus:shadow-[0_0_10px_rgba(255,0,255,0.3)] transition-all cursor-pointer"
             >
               {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(min => (
                 <option key={min} value={min}>{min}</option>
@@ -138,7 +138,7 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
                 setPeriod(e.target.value)
                 handleTimeChange(hour12, minutes, e.target.value)
               }}
-              className="bg-gray-900/80 border border-pink-500/30 rounded px-6 py-4 text-white text-2xl font-mono focus:border-pink-500 focus:outline-none focus:shadow-[0_0_10px_rgba(255,0,255,0.3)] transition-all cursor-pointer"
+              className="bg-amber-50 dark:bg-gray-900/80 border-2 border-amber-300 dark:border-pink-500/30 rounded px-6 py-4 text-gray-900 dark:text-white text-2xl font-mono focus:border-amber-500 dark:focus:border-pink-500 focus:outline-none focus:shadow-lg dark:focus:shadow-[0_0_10px_rgba(255,0,255,0.3)] transition-all cursor-pointer"
             >
               <option value="AM">AM</option>
               <option value="PM">PM</option>
@@ -146,8 +146,8 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
           </div>
           
           {selectedHour && (
-            <div className="mt-4 text-center text-pink-300 font-mono text-base">
-              <span className="text-lg">✓</span> Hora seleccionada: <span className="text-white font-bold text-xl">{hour12}:{minutes} {period}</span>
+            <div className="mt-4 text-center text-amber-700 dark:text-pink-300 font-mono text-base font-semibold">
+              <span className="text-lg">✓</span> Hora seleccionada: <span className="text-gray-900 dark:text-white font-bold text-xl">{hour12}:{minutes} {period}</span>
             </div>
           )}
         </div>
@@ -155,16 +155,16 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
 
       {/* Info message */}
       {selectedDate && selectedHour && (
-        <div className="border border-purple-500/30 rounded p-4 bg-purple-900/10 text-center">
-          <p className="text-purple-300 font-mono text-base">
+        <div className="border-2 border-orange-300 dark:border-purple-500/30 rounded p-4 bg-orange-100 dark:bg-purple-900/10 text-center shadow-md dark:shadow-none">
+          <p className="text-orange-800 dark:text-purple-300 font-mono text-base font-semibold">
             <span className="text-lg mr-2">✨</span>
-            Consulta programada para: <span className="text-white font-bold">{selectedDate}</span> a las <span className="text-white font-bold">{hour12}:{minutes} {period}</span>
+            Consulta programada para: <span className="text-gray-900 dark:text-white font-bold">{selectedDate}</span> a las <span className="text-gray-900 dark:text-white font-bold">{hour12}:{minutes} {period}</span>
           </p>
         </div>
       )}
 
       <div className="text-center">
-        <p className="text-sm text-cyan-300 uppercase tracking-widest font-mono animate-pulse">
+        <p className="text-sm text-orange-700 dark:text-cyan-300 uppercase tracking-widest font-mono animate-pulse">
           {t('scroll')}
         </p>
       </div>

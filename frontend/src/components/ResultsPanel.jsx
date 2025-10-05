@@ -24,28 +24,28 @@ function ResultsPanel({ result, isLoading, error }) {
     return (
       <div className="space-y-8">
         <div className="text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 uppercase tracking-tight mb-2"
-              style={{ textShadow: '0 0 20px rgba(0, 255, 255, 0.3)' }}>
+          <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-700 to-red-700 dark:from-cyan-400 dark:to-pink-500 uppercase tracking-tight mb-2 drop-shadow-md"
+              style={{ textShadow: '0 0 20px rgba(251, 146, 60, 0.2)' }}>
             {t('analyzingData')}
           </h2>
           <div className="flex items-center justify-center gap-2 mt-4">
-            <div className="h-px w-12 bg-cyan-400"></div>
-            <p className="text-xs text-cyan-400 uppercase tracking-widest font-mono">
+            <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
+            <p className="text-xs text-orange-700 dark:text-cyan-400 uppercase tracking-widest font-mono">
               {t('consultingNasa')}
             </p>
-            <div className="h-px w-12 bg-cyan-400"></div>
+            <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
           </div>
         </div>
 
-        <div className="relative border border-purple-500/30 p-12 bg-gray-800/50 backdrop-blur-sm text-center"
+        <div className="relative border-2 border-purple-300 dark:border-purple-500/30 p-12 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm text-center"
              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
-          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-purple-500"></div>
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-purple-500"></div>
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-purple-500 dark:border-purple-500"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-purple-500 dark:border-purple-500"></div>
           
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-orange-500 dark:border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <p className="text-cyan-400 font-mono text-lg">{t('processingQuery')}</p>
+          <p className="text-orange-700 dark:text-cyan-400 font-mono text-lg font-semibold">{t('processingQuery')}</p>
         </div>
       </div>
     )
@@ -60,15 +60,15 @@ function ResultsPanel({ result, isLoading, error }) {
           </h2>
         </div>
 
-        <div className="relative border border-red-500/30 p-8 bg-red-900/10 backdrop-blur-sm"
+        <div className="relative border-2 border-red-500 dark:border-red-500/30 p-8 bg-red-100 dark:bg-red-900/10 shadow-lg dark:shadow-none backdrop-blur-sm"
              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
           <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-red-500"></div>
           <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-red-500"></div>
           
           <div className="text-center">
             <span className="text-6xl mb-4 block">❌</span>
-            <p className="text-red-400 font-mono text-lg">{error}</p>
-            <p className="text-gray-400 font-mono text-sm mt-4">
+            <p className="text-red-700 dark:text-red-400 font-mono text-lg font-semibold">{error}</p>
+            <p className="text-gray-700 dark:text-gray-400 font-mono text-sm mt-4">
               // Verifica que el backend esté corriendo en http://localhost:8000
             </p>
           </div>
@@ -81,29 +81,29 @@ function ResultsPanel({ result, isLoading, error }) {
     return (
       <div className="space-y-8">
         <div className="text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 uppercase tracking-tight mb-2"
-              style={{ textShadow: '0 0 20px rgba(0, 255, 255, 0.3)' }}>
+          <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-700 to-red-700 dark:from-cyan-400 dark:to-pink-500 uppercase tracking-tight mb-2 drop-shadow-md"
+              style={{ textShadow: '0 0 20px rgba(251, 146, 60, 0.2)' }}>
             {t('results')}
           </h2>
           <div className="flex items-center justify-center gap-2 mt-4">
-            <div className="h-px w-12 bg-cyan-400"></div>
-            <p className="text-xs text-cyan-400 uppercase tracking-widest font-mono">
+            <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
+            <p className="text-xs text-orange-700 dark:text-cyan-400 uppercase tracking-widest font-mono">
               {t('waitingQuery')}
             </p>
-            <div className="h-px w-12 bg-cyan-400"></div>
+            <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
           </div>
         </div>
 
         {/* Historial de Consultas */}
         <HistoryPanel onSelectHistory={(item) => setSelectedHistoryItem(item.result)} />
 
-        <div className="relative border border-gray-600/30 p-12 bg-gray-800/50 backdrop-blur-sm text-center"
+        <div className="relative border-2 border-gray-400 dark:border-gray-600/30 p-12 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm text-center"
              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
-          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-gray-600"></div>
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-gray-600"></div>
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-gray-500 dark:border-gray-600"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-gray-500 dark:border-gray-600"></div>
           
-          <span className="text-6xl mb-4 block opacity-30">📊</span>
-          <p className="text-gray-400 font-mono">
+          <span className="text-6xl mb-4 block opacity-40 dark:opacity-30">📊</span>
+          <p className="text-gray-600 dark:text-gray-400 font-mono font-semibold">
             {t('resultsWillAppear')}
           </p>
         </div>
@@ -128,7 +128,7 @@ function ResultsPanel({ result, isLoading, error }) {
         <div className="flex justify-center">
           <button
             onClick={scrollToDateSection}
-            className="relative border-2 border-cyan-400 bg-cyan-500/10 px-8 py-3 text-cyan-400 hover:bg-cyan-500/20 hover:shadow-[0_0_20px_rgba(0,255,255,0.3)] transition-all font-mono text-sm uppercase tracking-wide group flex items-center gap-2"
+            className="relative border-2 border-orange-500 dark:border-cyan-400 bg-orange-100 dark:bg-cyan-500/10 px-8 py-3 text-orange-700 dark:text-cyan-400 hover:bg-orange-200 dark:hover:bg-cyan-500/20 hover:shadow-xl dark:hover:shadow-[0_0_20px_rgba(0,255,255,0.3)] transition-all font-mono text-sm uppercase tracking-wide group flex items-center gap-2"
             style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)' }}
           >
             <RefreshCw className="w-4 h-4" />
@@ -160,16 +160,16 @@ function ResultsPanel({ result, isLoading, error }) {
       {/* Historial de Consultas */}
       <HistoryPanel onSelectHistory={(item) => setSelectedHistoryItem(item.result)} />
       <div className="text-center space-y-4">
-        <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 uppercase tracking-tight mb-2"
-            style={{ textShadow: '0 0 20px rgba(0, 255, 255, 0.3)' }}>
+        <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-700 to-red-700 dark:from-cyan-400 dark:to-pink-500 uppercase tracking-tight mb-2 drop-shadow-md"
+            style={{ textShadow: '0 0 20px rgba(251, 146, 60, 0.2)' }}>
           {t('weatherPrediction')}
         </h2>
         <div className="flex items-center justify-center gap-2">
-          <div className="h-px w-12 bg-cyan-400"></div>
-          <p className="text-sm text-cyan-400 uppercase tracking-widest font-mono">
+          <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
+          <p className="text-sm text-orange-700 dark:text-cyan-400 uppercase tracking-widest font-mono">
             {data?.location?.name || 'Ubicación'}
           </p>
-          <div className="h-px w-12 bg-cyan-400"></div>
+          <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
         </div>
         
         {/* Weather Status Badge */}
@@ -193,22 +193,22 @@ function ResultsPanel({ result, isLoading, error }) {
 
       {/* Datos Formateados */}
       {data?.formatted_data && (
-        <div className="relative border border-cyan-500/30 p-6 bg-gray-800/50 backdrop-blur-sm"
+        <div className="relative border-2 border-orange-300 dark:border-cyan-500/30 p-6 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm"
              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
-          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-cyan-500"></div>
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-cyan-500"></div>
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-orange-500 dark:border-cyan-500"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-orange-500 dark:border-cyan-500"></div>
           
-          <h3 className="text-xl font-bold text-cyan-400 mb-4 uppercase tracking-wide font-mono">
+          <h3 className="text-xl font-bold text-orange-700 dark:text-cyan-400 mb-4 uppercase tracking-wide font-mono">
             // {t('weatherData')}
           </h3>
           
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 font-mono text-sm">
             {Object.entries(data.formatted_data).map(([key, value]) => (
-              <div key={key} className="bg-gray-900/50 border border-cyan-500/20 p-3 rounded">
-                <div className="text-gray-300 text-sm uppercase tracking-wider mb-1">
+              <div key={key} className="bg-orange-50 dark:bg-gray-900/50 border-2 border-orange-300 dark:border-cyan-500/20 p-3 rounded shadow-sm dark:shadow-none">
+                <div className="text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider mb-1 font-semibold">
                   {key.replace(/_/g, ' ')}
                 </div>
-                <div className="text-white font-bold text-lg">{value}</div>
+                <div className="text-gray-900 dark:text-white font-bold text-lg">{value}</div>
               </div>
             ))}
           </div>
@@ -256,7 +256,7 @@ function ResultsPanel({ result, isLoading, error }) {
         <div className="flex justify-center pt-4">
           <button
             onClick={scrollToDateSection}
-            className="relative border-2 border-cyan-400 bg-cyan-500/10 px-8 py-3 text-cyan-400 hover:bg-cyan-500/20 hover:shadow-[0_0_20px_rgba(0,255,255,0.3)] transition-all font-mono text-sm uppercase tracking-wide group flex items-center gap-2"
+            className="relative border-2 border-orange-500 dark:border-cyan-400 bg-orange-100 dark:bg-cyan-500/10 px-8 py-3 text-orange-700 dark:text-cyan-400 hover:bg-orange-200 dark:hover:bg-cyan-500/20 hover:shadow-xl dark:hover:shadow-[0_0_20px_rgba(0,255,255,0.3)] transition-all font-mono text-sm uppercase tracking-wide group flex items-center gap-2"
             style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)' }}
           >
             <RefreshCw className="w-4 h-4" />

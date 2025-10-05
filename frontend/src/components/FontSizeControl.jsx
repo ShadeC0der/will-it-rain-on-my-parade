@@ -62,7 +62,7 @@ function FontSizeControl() {
   return (
     <button
       onClick={cycleFontSize}
-      className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border-2 border-purple-400 text-purple-400 hover:text-purple-300 rounded-lg transition-all hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] font-mono uppercase text-sm"
+      className="flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-500/20 hover:bg-purple-200 dark:hover:bg-purple-500/30 border-2 border-purple-500 dark:border-purple-400 text-purple-700 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 rounded-lg transition-all hover:shadow-lg dark:hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] font-mono uppercase text-sm"
       title={getSizeDescription()}
     >
       <Type className="w-4 h-4" />
