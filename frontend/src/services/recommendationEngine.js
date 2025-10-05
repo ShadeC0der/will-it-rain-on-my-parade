@@ -4,6 +4,49 @@
  */
 
 /**
+ * Valida y sanitiza un valor de probabilidad
+ * @param {*} value - Valor a validar
+ * @returns {number} - Valor sanitizado entre 0 y 1
+ */
+const sanitizeProbability = (value) => {
+  // Convertir a número
+  const num = parseFloat(value)
+  
+  // Si no es un número válido, retornar 0
+  if (isNaN(num) || num === null || num === undefined) {
+    return 0
+  }
+  
+  // Asegurar que esté entre 0 y 1
+  return Math.max(0, Math.min(1, num))
+}
+
+/**
+ * Valida y sanitiza el objeto de predicciones
+ * @param {Object} predicted - Probabilidades del backend
+ * @returns {Object} - Objeto sanitizado con todos los valores válidos
+ */
+const sanitizePredictions = (predicted) => {
+  if (!predicted || typeof predicted !== 'object') {
+    return {
+      veryHot: 0,
+      veryCold: 0,
+      veryWindy: 0,
+      veryWet: 0,
+      veryUncomfortable: 0
+    }
+  }
+  
+  return {
+    veryHot: sanitizeProbability(predicted.veryHot),
+    veryCold: sanitizeProbability(predicted.veryCold),
+    veryWindy: sanitizeProbability(predicted.veryWindy),
+    veryWet: sanitizeProbability(predicted.veryWet),
+    veryUncomfortable: sanitizeProbability(predicted.veryUncomfortable)
+  }
+}
+
+/**
  * Genera recomendaciones basadas en las predicciones reales
  * @param {Object} predicted - Probabilidades de condiciones adversas
  * @param {Object} query - Información de la consulta (ubicación, fecha, umbrales)
@@ -18,11 +61,14 @@ export const generateRecommendations = (predicted, query) => {
     }
   }
 
+  // Sanitizar y validar todas las probabilidades
+  const sanitized = sanitizePredictions(predicted)
+  
   const recommendations = []
   const conditions = []
   
-  // Analizar cada condición
-  const { veryHot, veryCold, veryWindy, veryWet, veryUncomfortable } = predicted
+  // Analizar cada condición con valores sanitizados
+  const { veryHot, veryCold, veryWindy, veryWet, veryUncomfortable } = sanitized
 
   // 🔥 MUY CALUROSO
   if (veryHot >= 0.7) {

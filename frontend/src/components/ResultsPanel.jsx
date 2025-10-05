@@ -130,8 +130,29 @@ function ResultsPanel({ result, isLoading, error }) {
     veryUncomfortable: { es: 'Muy Incómodo', en: 'Very Uncomfortable', icon: '😰', color: 'orange' }
   }
 
+  // Validar que predicted tenga valores válidos
+  const validatePredicted = (predicted) => {
+    if (!predicted || typeof predicted !== 'object') return false
+    
+    const values = [
+      predicted.veryHot,
+      predicted.veryCold,
+      predicted.veryWindy,
+      predicted.veryWet,
+      predicted.veryUncomfortable
+    ]
+    
+    // Verificar que al menos un valor sea válido
+    return values.some(val => {
+      const num = parseFloat(val)
+      return !isNaN(num) && num !== null && num !== undefined
+    })
+  }
+
+  const hasPredictedData = data?.predicted && validatePredicted(data.predicted)
+
   // Generar recomendaciones basadas en los datos reales del backend
-  const analysisResult = data?.predicted 
+  const analysisResult = hasPredictedData
     ? generateRecommendations(data.predicted, data.query)
     : { riskLevel: 'low', recommendations: [], summary: '' }
 
@@ -141,13 +162,22 @@ function ResultsPanel({ result, isLoading, error }) {
   const getDominantCondition = (predictions) => {
     if (!predictions) return null
     const entries = Object.entries(predictions)
-    const [category, probability] = entries.reduce((max, entry) => 
+    
+    // Filtrar solo valores numéricos válidos
+    const validEntries = entries.filter(([_, value]) => {
+      const num = parseFloat(value)
+      return !isNaN(num) && num !== null && num !== undefined
+    })
+    
+    if (validEntries.length === 0) return null
+    
+    const [category, probability] = validEntries.reduce((max, entry) => 
       entry[1] > max[1] ? entry : max
     )
     return { category, probability }
   }
 
-  const dominantCondition = data?.predicted ? getDominantCondition(data.predicted) : null
+  const dominantCondition = hasPredictedData ? getDominantCondition(data.predicted) : null
 
   return (
     <div className="space-y-8">
@@ -234,34 +264,49 @@ function ResultsPanel({ result, isLoading, error }) {
             // Probabilidades de Condiciones Adversas
           </h3>
           
+          {/* Advertencia si hay datos inválidos */}
+          {!hasPredictedData && data?.predicted && (
+            <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/20 border-2 border-yellow-500/50 rounded">
+              <p className="text-yellow-800 dark:text-yellow-400 text-sm font-mono">
+                ⚠️ Advertencia: Algunos valores de predicción no están disponibles o son inválidos. Mostrando datos parciales.
+              </p>
+            </div>
+          )}
+          
           <div className="space-y-4">
-            {Object.entries(data.predicted).map(([category, probability]) => (
-              <div key={category} className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="font-mono text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
-                    <span className="text-2xl">{categoryNames[category]?.icon}</span>
-                    {categoryNames[category]?.es}
-                  </span>
-                  <span className={`font-mono font-bold ${
-                    probability >= 0.7 ? 'text-red-600 dark:text-red-400' :
-                    probability >= 0.4 ? 'text-yellow-600 dark:text-yellow-400' :
-                    'text-green-600 dark:text-green-400'
-                  }`}>
-                    {(probability * 100).toFixed(1)}%
-                  </span>
+            {Object.entries(data.predicted).map(([category, probability]) => {
+              // Sanitizar el valor para visualización
+              const sanitizedProb = parseFloat(probability)
+              const displayProb = isNaN(sanitizedProb) ? 0 : Math.max(0, Math.min(1, sanitizedProb))
+              
+              return (
+                <div key={category} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-mono text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                      <span className="text-2xl">{categoryNames[category]?.icon}</span>
+                      {categoryNames[category]?.es}
+                    </span>
+                    <span className={`font-mono font-bold ${
+                      displayProb >= 0.7 ? 'text-red-600 dark:text-red-400' :
+                      displayProb >= 0.4 ? 'text-yellow-600 dark:text-yellow-400' :
+                      'text-green-600 dark:text-green-400'
+                    }`}>
+                      {(displayProb * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-500 ${
+                        displayProb >= 0.7 ? 'bg-red-500' :
+                        displayProb >= 0.4 ? 'bg-yellow-500' :
+                        'bg-green-500'
+                      }`}
+                      style={{ width: `${displayProb * 100}%` }}
+                    ></div>
+                  </div>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-                  <div 
-                    className={`h-full transition-all duration-500 ${
-                      probability >= 0.7 ? 'bg-red-500' :
-                      probability >= 0.4 ? 'bg-yellow-500' :
-                      'bg-green-500'
-                    }`}
-                    style={{ width: `${probability * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}
