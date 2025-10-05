@@ -75,7 +75,7 @@ function ResultsPanel({ result, isLoading, error }) {
     )
   }
 
-  if (!result) {
+  if (!displayResult) {
     return (
       <div className="space-y-8">
         <div className="text-center">
@@ -183,7 +183,7 @@ function ResultsPanel({ result, isLoading, error }) {
   const dominantCondition = hasPredictedData ? getDominantCondition(data.predicted) : null
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" data-results-section>
       {/* Botón de Nueva Consulta */}
       {!isFromHistory && (
         <div className="flex justify-center">

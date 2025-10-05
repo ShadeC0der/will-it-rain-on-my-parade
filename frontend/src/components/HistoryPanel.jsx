@@ -27,6 +27,18 @@ function HistoryPanel({ onSelectHistory }) {
   const [history, setHistory] = useState([])
   const [isExpanded, setIsExpanded] = useState(false)
 
+  const handleSelectHistory = (item) => {
+    onSelectHistory(item)
+    
+    // Scroll automático a los resultados
+    setTimeout(() => {
+      const resultsSection = document.querySelector('[data-results-section]')
+      if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  }
+
   // Cargar historial al montar y actualizar cada vez que cambie
   useEffect(() => {
     loadHistory()
@@ -182,7 +194,7 @@ function HistoryPanel({ onSelectHistory }) {
               {history.map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => onSelectHistory(item)}
+                  onClick={() => handleSelectHistory(item)}
                   className="p-4 hover:bg-orange-50 dark:hover:bg-cyan-500/10 hover:border-l-4 hover:border-l-orange-500 dark:hover:border-l-cyan-400 hover:shadow-lg dark:hover:shadow-cyan-500/20 cursor-pointer transition-all group relative"
                 >
                   {/* Indicador de clickeable */}
