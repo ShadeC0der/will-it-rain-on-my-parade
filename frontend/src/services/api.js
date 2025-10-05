@@ -4,7 +4,7 @@ import { getMockWeatherResponse } from './mockData'
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 // 🔧 MODO DE DESARROLLO: Cambiar a false cuando el backend esté listo
-const USE_MOCK_DATA = true
+const USE_MOCK_DATA = false
 
 /**
  * Formato de petición al backend Django:
@@ -23,11 +23,7 @@ const USE_MOCK_DATA = true
 export const submitWeatherQuery = async (queryData) => {
   // 🧪 MODO DE PRUEBA: Usar datos mock si está activado
   if (USE_MOCK_DATA) {
-    console.log('🧪 USANDO DATOS DE PRUEBA (MOCK DATA)')
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    console.log('⚠️  El backend aún no está conectado')
-    console.log('📊 Generando datos aleatorios para testing...')
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log('🧪 Modo de prueba activado - Usando datos simulados')
     
     try {
       const mockResponse = await getMockWeatherResponse(
@@ -36,24 +32,19 @@ export const submitWeatherQuery = async (queryData) => {
         queryData.time
       )
       
-      console.log('✅ Datos mock generados:')
-      console.log('📍 Condición:', mockResponse.data.condition)
-      console.log('🎲 Nivel de riesgo:', mockResponse.data.risk_level)
-      console.log('📊 Predicciones:', mockResponse.data.predictions)
-      
       return mockResponse
     } catch (error) {
-      console.error('❌ Error generando datos mock:', error)
-      throw error
+      console.error('❌ Error generando datos de prueba:', error)
+      throw new Error('Error al generar datos de prueba')
     }
   }
 
   // 🔗 MODO PRODUCCIÓN: Llamar al backend real
   try {
-    console.log('🔗 CONECTANDO CON BACKEND REAL')
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log('🔗 Conectando con el servidor...')
+    console.log('📍 URL:', API_BASE_URL)
     
-    const response = await fetch(`${API_BASE_URL}/api/weather/predict`, {
+    const response = await fetch(`${API_BASE_URL}/api/clima/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -66,50 +57,51 @@ export const submitWeatherQuery = async (queryData) => {
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      const errorMessage = `Error del servidor (${response.status})`
+      throw new Error(errorMessage)
     }
 
     const data = await response.json()
     
-    console.log('✅ Respuesta del backend recibida')
-    console.log('📊 Datos:', data)
+    console.log('✅ Respuesta recibida correctamente')
     
     return data
   } catch (error) {
-    console.error('❌ Error conectando con backend:', error)
-    console.log('💡 Tip: Verifica que el backend esté corriendo en', API_BASE_URL)
-    throw error
+    console.error('❌ Error de conexión:', error.message)
+    
+    // Crear mensaje de error genérico
+    const userError = new Error('No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet e intenta nuevamente.')
+    userError.originalError = error
+    
+    throw userError
   }
 }
 
 /**
- * Formato de respuesta esperado de Django:
+ * Formato de respuesta real del backend Django:
  * {
- *   "status": "success",
- *   "data": {
- *     "location": {
- *       "name": "Buenos Aires, Argentina",
- *       "coordinates": {
- *         "lat": -34.6037,
- *         "lon": -58.3816
- *       }
- *     },
- *     "datetime": "2025-10-04T14:30:00",
- *     "predictions": {
- *       "hot": 0.75,        // Probabilidad 0-1
- *       "cold": 0.10,
- *       "windy": 0.45,
- *       "humid": 0.60,
- *       "uncomfortable": 0.55
- *     },
- *     "recommendation": "Se esperan condiciones calurosas y húmedas. Se recomienda posponer el evento.",
- *     "nasa_data": {
- *       "temperature": 32.5,
- *       "humidity": 75,
- *       "wind_speed": 15,
- *       "pressure": 1013
- *     }
- *   }
+ *   "predicted": {
+ *     "veryHot": 0,
+ *     "veryCold": 0,
+ *     "veryWindy": 0,
+ *     "veryWet": 0.129,
+ *     "veryUncomfortable": 0
+ *   },
+ *   "observed": {
+ *     "veryHot": { "actualOutcome": 0, "brierScore": 0 },
+ *     "veryCold": { "actualOutcome": 1, "brierScore": 1 },
+ *     "veryWindy": { "actualOutcome": 0, "brierScore": 0 },
+ *     "veryWet": { "actualOutcome": 0, "brierScore": 0.0166 },
+ *     "veryUncomfortable": { "actualOutcome": 0, "brierScore": 0 }
+ *   },
+ *   "meanBrierScore": 0.203,
+ *   "query": {
+ *     "latitude": -38.7359,
+ *     "longitude": -72.5904,
+ *     "targetDate": "2021-10-15",
+ *     "thresholds": { ... }
+ *   },
+ *   "externalErrors": "GESDISC token rejected by server." | null
  * }
  */
 

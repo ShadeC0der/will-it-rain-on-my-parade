@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext'
 import HistoryPanel from './HistoryPanel'
+import { generateRecommendations } from '../services/recommendationEngine'
 import { 
   RefreshCw, 
   AlertTriangle, 
@@ -68,9 +69,6 @@ function ResultsPanel({ result, isLoading, error }) {
           <div className="text-center">
             <span className="text-6xl mb-4 block">❌</span>
             <p className="text-red-700 dark:text-red-400 font-mono text-lg font-semibold">{error}</p>
-            <p className="text-gray-700 dark:text-gray-400 font-mono text-sm mt-4">
-              // Verifica que el backend esté corriendo en http://localhost:8000
-            </p>
           </div>
         </div>
       </div>
@@ -111,8 +109,8 @@ function ResultsPanel({ result, isLoading, error }) {
     )
   }
 
-  // Mostrar resultados
-  const { data } = displayResult
+  // Mostrar resultados - Adaptado al formato real del backend
+  const data = displayResult
 
   const scrollToDateSection = () => {
     const dateSection = document.getElementById('date-time-section')
@@ -120,6 +118,34 @@ function ResultsPanel({ result, isLoading, error }) {
       dateSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
+
+  // Mapear las categorías a nombres legibles
+  const categoryNames = {
+    veryHot: { es: 'Muy Caluroso', en: 'Very Hot', icon: '🔥', color: 'red' },
+    veryCold: { es: 'Muy Frío', en: 'Very Cold', icon: '❄️', color: 'blue' },
+    veryWindy: { es: 'Muy Ventoso', en: 'Very Windy', icon: '💨', color: 'cyan' },
+    veryWet: { es: 'Muy Húmedo', en: 'Very Wet', icon: '💧', color: 'blue' },
+    veryUncomfortable: { es: 'Muy Incómodo', en: 'Very Uncomfortable', icon: '😰', color: 'orange' }
+  }
+
+  // Generar recomendaciones basadas en los datos reales del backend
+  const analysisResult = data?.predicted 
+    ? generateRecommendations(data.predicted, data.query)
+    : { riskLevel: 'low', recommendations: [], summary: '' }
+
+  const riskLevel = analysisResult.riskLevel
+
+  // Determinar la condición más probable
+  const getDominantCondition = (predictions) => {
+    if (!predictions) return null
+    const entries = Object.entries(predictions)
+    const [category, probability] = entries.reduce((max, entry) => 
+      entry[1] > max[1] ? entry : max
+    )
+    return { category, probability }
+  }
+
+  const dominantCondition = data?.predicted ? getDominantCondition(data.predicted) : null
 
   return (
     <div className="space-y-8">
@@ -159,6 +185,7 @@ function ResultsPanel({ result, isLoading, error }) {
       
       {/* Historial de Consultas */}
       <HistoryPanel onSelectHistory={(item) => setSelectedHistoryItem(item.result)} />
+      
       <div className="text-center space-y-4">
         <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-700 to-red-700 dark:from-cyan-400 dark:to-pink-500 uppercase tracking-tight mb-2 drop-shadow-md"
             style={{ textShadow: '0 0 20px rgba(251, 146, 60, 0.2)' }}>
@@ -167,81 +194,166 @@ function ResultsPanel({ result, isLoading, error }) {
         <div className="flex items-center justify-center gap-2">
           <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
           <p className="text-sm text-orange-700 dark:text-cyan-400 uppercase tracking-widest font-mono">
-            {data?.location?.name || 'Ubicación'}
+            {data?.query?.latitude && data?.query?.longitude 
+              ? `${data.query.latitude.toFixed(4)}, ${data.query.longitude.toFixed(4)}`
+              : 'Ubicación'}
           </p>
           <div className="h-px w-12 bg-orange-500 dark:bg-cyan-400"></div>
         </div>
         
-        {/* Weather Status Badge */}
-        {data?.weather_status && (
+        {/* Risk Level Badge */}
+        {dominantCondition && (
           <div className="inline-block">
             <div className={`px-6 py-3 rounded-lg font-mono font-bold text-lg uppercase tracking-wider flex items-center gap-2 ${
-              data.risk_level === 'high' 
+              riskLevel === 'high' 
                 ? 'bg-red-500/20 text-red-400 border border-red-500/50' 
-                : data.risk_level === 'medium'
+                : riskLevel === 'medium'
                 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50'
                 : 'bg-green-500/20 text-green-400 border border-green-500/50'
             }`}>
-              {data.weather_status}
-              {data.risk_level === 'high' && <AlertTriangle className="w-6 h-6" />}
-              {data.risk_level === 'medium' && <Zap className="w-6 h-6" />}
-              {data.risk_level === 'low' && <CheckCircle className="w-6 h-6" />}
+              {categoryNames[dominantCondition.category]?.icon} 
+              {(dominantCondition.probability * 100).toFixed(1)}% {categoryNames[dominantCondition.category]?.es}
+              {riskLevel === 'high' && <AlertTriangle className="w-6 h-6" />}
+              {riskLevel === 'medium' && <Zap className="w-6 h-6" />}
+              {riskLevel === 'low' && <CheckCircle className="w-6 h-6" />}
             </div>
           </div>
         )}
       </div>
 
-      {/* Datos Formateados */}
-      {data?.formatted_data && (
+      {/* Predicciones - Probabilidades */}
+      {data?.predicted && (
         <div className="relative border-2 border-orange-300 dark:border-cyan-500/30 p-6 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm"
              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
           <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-orange-500 dark:border-cyan-500"></div>
           <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-orange-500 dark:border-cyan-500"></div>
           
           <h3 className="text-xl font-bold text-orange-700 dark:text-cyan-400 mb-4 uppercase tracking-wide font-mono">
-            // {t('weatherData')}
+            // Probabilidades de Condiciones Adversas
           </h3>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 font-mono text-sm">
-            {Object.entries(data.formatted_data).map(([key, value]) => (
-              <div key={key} className="bg-orange-50 dark:bg-gray-900/50 border-2 border-orange-300 dark:border-cyan-500/20 p-3 rounded shadow-sm dark:shadow-none">
-                <div className="text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider mb-1 font-semibold">
-                  {key.replace(/_/g, ' ')}
+          <div className="space-y-4">
+            {Object.entries(data.predicted).map(([category, probability]) => (
+              <div key={category} className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-mono text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
+                    <span className="text-2xl">{categoryNames[category]?.icon}</span>
+                    {categoryNames[category]?.es}
+                  </span>
+                  <span className={`font-mono font-bold ${
+                    probability >= 0.7 ? 'text-red-600 dark:text-red-400' :
+                    probability >= 0.4 ? 'text-yellow-600 dark:text-yellow-400' :
+                    'text-green-600 dark:text-green-400'
+                  }`}>
+                    {(probability * 100).toFixed(1)}%
+                  </span>
                 </div>
-                <div className="text-gray-900 dark:text-white font-bold text-lg">{value}</div>
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                  <div 
+                    className={`h-full transition-all duration-500 ${
+                      probability >= 0.7 ? 'bg-red-500' :
+                      probability >= 0.4 ? 'bg-yellow-500' :
+                      'bg-green-500'
+                    }`}
+                    style={{ width: `${probability * 100}%` }}
+                  ></div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Recomendaciones */}
-      {data?.recommendations && (
-        <div className={`relative border p-6 backdrop-blur-sm ${
-          data?.risk_level === 'high'
-            ? 'border-red-500/30 bg-red-900/10' 
-            : data?.risk_level === 'medium'
-            ? 'border-yellow-500/30 bg-yellow-900/10'
-            : 'border-green-500/30 bg-green-900/10'
-        }`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
-          <div className={`absolute top-0 right-0 w-3 h-3 border-t border-r ${
-            data?.risk_level === 'high' ? 'border-red-500' : data?.risk_level === 'medium' ? 'border-yellow-500' : 'border-green-500'
-          }`}></div>
-          <div className={`absolute bottom-0 left-0 w-3 h-3 border-b border-l ${
-            data?.risk_level === 'high' ? 'border-red-500' : data?.risk_level === 'medium' ? 'border-yellow-500' : 'border-green-500'
-          }`}></div>
+      {/* Información de Consulta */}
+      {data?.query && (
+        <div className="relative border-2 border-purple-300 dark:border-purple-500/30 p-6 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm"
+             style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-purple-500 dark:border-purple-500"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-purple-500 dark:border-purple-500"></div>
           
-          <h3 className="text-2xl font-bold text-white mb-4 uppercase tracking-wide font-mono flex items-center gap-2">
-            // {t('recommendations')}
-            {data?.risk_level === 'high' && <AlertTriangle className="w-8 h-8" />}
-            {data?.risk_level === 'medium' && <Zap className="w-8 h-8" />}
-            {data?.risk_level === 'low' && <CheckCircle className="w-8 h-8" />}
+          <h3 className="text-xl font-bold text-purple-700 dark:text-purple-400 mb-4 uppercase tracking-wide font-mono">
+            // Detalles de la Consulta
           </h3>
           
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-sm">
+            <div className="bg-orange-50 dark:bg-gray-900/50 border-2 border-orange-300 dark:border-cyan-500/20 p-3 rounded shadow-sm dark:shadow-none">
+              <div className="text-gray-700 dark:text-gray-300 text-xs uppercase tracking-wider mb-1 font-semibold">
+                📅 Fecha Objetivo
+              </div>
+              <div className="text-gray-900 dark:text-white font-bold text-lg">{data.query.targetDate}</div>
+            </div>
+            <div className="bg-orange-50 dark:bg-gray-900/50 border-2 border-orange-300 dark:border-cyan-500/20 p-3 rounded shadow-sm dark:shadow-none">
+              <div className="text-gray-700 dark:text-gray-300 text-xs uppercase tracking-wider mb-1 font-semibold">
+                📊 Brier Score Promedio
+              </div>
+              <div className="text-gray-900 dark:text-white font-bold text-lg">
+                {data.meanBrierScore !== null && data.meanBrierScore !== undefined 
+                  ? data.meanBrierScore.toFixed(4) 
+                  : 'N/A'}
+              </div>
+            </div>
+          </div>
+
+          {/* Advertencia de errores externos si existen */}
+          {data.externalErrors && (
+            <div className="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-500/50 rounded">
+              <p className="text-yellow-800 dark:text-yellow-400 text-sm font-mono">
+                ⚠️ {data.externalErrors}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Recomendaciones Basadas en Datos Reales */}
+      {analysisResult.recommendations && analysisResult.recommendations.length > 0 && (
+        <div className={`relative border-2 p-6 backdrop-blur-sm ${
+          riskLevel === 'high'
+            ? 'border-red-500 dark:border-red-500/50 bg-red-50 dark:bg-red-900/20' 
+            : riskLevel === 'medium'
+            ? 'border-yellow-500 dark:border-yellow-500/50 bg-yellow-50 dark:bg-yellow-900/20'
+            : 'border-green-500 dark:border-green-500/50 bg-green-50 dark:bg-green-900/20'
+        } shadow-lg dark:shadow-none`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
+          <div className={`absolute top-0 right-0 w-3 h-3 border-t border-r ${
+            riskLevel === 'high' ? 'border-red-500' : riskLevel === 'medium' ? 'border-yellow-500' : 'border-green-500'
+          }`}></div>
+          <div className={`absolute bottom-0 left-0 w-3 h-3 border-b border-l ${
+            riskLevel === 'high' ? 'border-red-500' : riskLevel === 'medium' ? 'border-yellow-500' : 'border-green-500'
+          }`}></div>
+          
+          <h3 className={`text-2xl font-bold mb-4 uppercase tracking-wide font-mono flex items-center gap-2 ${
+            riskLevel === 'high' ? 'text-red-700 dark:text-red-400' : 
+            riskLevel === 'medium' ? 'text-yellow-700 dark:text-yellow-400' : 
+            'text-green-700 dark:text-green-400'
+          }`}>
+            // {t('recommendations')}
+            {riskLevel === 'high' && <AlertTriangle className="w-8 h-8" />}
+            {riskLevel === 'medium' && <Zap className="w-8 h-8" />}
+            {riskLevel === 'low' && <CheckCircle className="w-8 h-8" />}
+          </h3>
+          
+          {/* Resumen del Riesgo */}
+          <div className={`p-4 mb-4 rounded border-2 ${
+            riskLevel === 'high' ? 'bg-red-100 dark:bg-red-900/30 border-red-500' :
+            riskLevel === 'medium' ? 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-500' :
+            'bg-green-100 dark:bg-green-900/30 border-green-500'
+          }`}>
+            <p className={`font-mono font-bold text-lg ${
+              riskLevel === 'high' ? 'text-red-800 dark:text-red-300' :
+              riskLevel === 'medium' ? 'text-yellow-800 dark:text-yellow-300' :
+              'text-green-800 dark:text-green-300'
+            }`}>
+              {analysisResult.summary}
+            </p>
+          </div>
+
+          {/* Lista de Recomendaciones */}
           <ul className="space-y-3">
-            {data.recommendations.map((recommendation, index) => (
+            {analysisResult.recommendations.map((recommendation, index) => (
               <li key={index} className={`flex items-start gap-3 font-mono text-base leading-relaxed ${
-                data?.risk_level === 'high' ? 'text-red-300' : data?.risk_level === 'medium' ? 'text-yellow-300' : 'text-green-300'
+                riskLevel === 'high' ? 'text-red-800 dark:text-red-300' : 
+                riskLevel === 'medium' ? 'text-yellow-800 dark:text-yellow-300' : 
+                'text-green-800 dark:text-green-300'
               }`}>
                 <span className="text-lg mt-0.5">•</span>
                 <span>{recommendation}</span>

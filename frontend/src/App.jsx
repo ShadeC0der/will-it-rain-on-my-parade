@@ -144,36 +144,25 @@ function App() {
       }
 
       console.log('═══════════════════════════════════════')
-      console.log('📤 ENVIANDO CONSULTA AL BACKEND')
-      console.log('═══════════════════════════════════════')
+      console.log('📤 Enviando consulta...')
       console.log('📍 Ubicación:', queryData.location)
       console.log('📅 Fecha:', queryData.date)
       console.log('⏰ Hora:', queryData.time)
-      console.log('🔗 Endpoint:', 'http://localhost:8000/api/weather/predict')
-      console.log('📦 Datos completos:', JSON.stringify(queryData, null, 2))
       console.log('═══════════════════════════════════════')
 
       const response = await submitWeatherQuery(queryData)
       
-      console.log('✅ RESPUESTA RECIBIDA DEL BACKEND')
-      console.log('═══════════════════════════════════════')
-      console.log('📥 Respuesta completa:', JSON.stringify(response, null, 2))
-      console.log('═══════════════════════════════════════')
+      console.log('✅ Respuesta recibida')
       
       setResult(response)
       
       // Guardar en historial
       saveToHistory(queryData, response)
     } catch (err) {
-      console.log('❌ ERROR EN LA CONSULTA')
-      console.log('═══════════════════════════════════════')
-      console.log('🔴 Tipo de error:', err.name)
-      console.log('🔴 Mensaje:', err.message)
-      console.log('🔴 Stack:', err.stack)
-      console.log('═══════════════════════════════════════')
+      console.error('❌ Error en la consulta:', err.message)
       
       setError(err.message)
-      alert('Error al conectar con el backend. Asegúrate de que Django esté corriendo en http://localhost:8000')
+      // No mostrar alert automáticamente - el error ya se muestra en la UI
     } finally {
       setIsSubmitting(false)
     }

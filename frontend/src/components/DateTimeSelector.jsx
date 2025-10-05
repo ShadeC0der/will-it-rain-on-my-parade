@@ -147,7 +147,7 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
           
           {selectedHour && (
             <div className="mt-4 text-center text-amber-700 dark:text-pink-300 font-mono text-base font-semibold">
-              <span className="text-lg">✓</span> Hora seleccionada: <span className="text-gray-900 dark:text-white font-bold text-xl">{hour12}:{minutes} {period}</span>
+              <span className="text-lg">✓</span> {t('selectedTime')}: <span className="text-gray-900 dark:text-white font-bold text-xl">{hour12}:{minutes} {period}</span>
             </div>
           )}
         </div>
@@ -158,7 +158,7 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
         <div className="border-2 border-orange-300 dark:border-purple-500/30 rounded p-4 bg-orange-100 dark:bg-purple-900/10 text-center shadow-md dark:shadow-none">
           <p className="text-orange-800 dark:text-purple-300 font-mono text-base font-semibold">
             <span className="text-lg mr-2">✨</span>
-            Consulta programada para: <span className="text-gray-900 dark:text-white font-bold">{selectedDate}</span> a las <span className="text-gray-900 dark:text-white font-bold">{hour12}:{minutes} {period}</span>
+            {t('scheduledFor')}: <span className="text-gray-900 dark:text-white font-bold">{selectedDate}</span> {t('at')} <span className="text-gray-900 dark:text-white font-bold">{hour12}:{minutes} {period}</span>
           </p>
         </div>
       )}
