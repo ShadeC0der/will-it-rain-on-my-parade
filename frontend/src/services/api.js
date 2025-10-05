@@ -1,7 +1,7 @@
 // API Service para comunicación con Django backend
 import { getMockWeatherResponse } from './mockData'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '')
 
 // 🔧 MODO DE DESARROLLO: Cambiar a false cuando el backend esté listo
 const USE_MOCK_DATA = false
@@ -19,6 +19,30 @@ const USE_MOCK_DATA = false
  * 2. Consultar NASA API con las coordenadas
  * 3. Retornar predicción de condiciones adversas
  */
+
+// Normaliza diferentes formatos de respuesta que pueda entregar el backend
+const normalizeBackendResponse = (raw) => {
+  if (!raw) return null
+  // Si viene un array (por ejemplo lista con un solo elemento)
+  if (Array.isArray(raw)) {
+    raw = raw[0]
+  }
+  // Algunos posibles nombres alternativos
+  const predicted = raw.predicted || raw.predictions || raw.probabilities || null
+  const observed = raw.observed || raw.observations || null
+  const meanBrierScore = raw.meanBrierScore || raw.mean_brier_score || null
+  const query = raw.query || raw.request || null
+  const externalErrors = raw.externalErrors || raw.external_errors || raw.error_external || null
+
+  return {
+    ...raw,
+    predicted,
+    observed,
+    meanBrierScore,
+    query,
+    externalErrors
+  }
+}
 
 export const submitWeatherQuery = async (queryData) => {
   // 🧪 MODO DE PRUEBA: Usar datos mock si está activado
@@ -44,33 +68,54 @@ export const submitWeatherQuery = async (queryData) => {
     console.log('🔗 Conectando con el servidor...')
     console.log('📍 URL:', API_BASE_URL)
     
-    const response = await fetch(`${API_BASE_URL}/api/clima/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        location: queryData.location,
-        date: queryData.date,
-        time: queryData.time
-      })
-    })
-
-    if (!response.ok) {
-      const errorMessage = `Error del servidor (${response.status})`
-      throw new Error(errorMessage)
+    const payload = {
+      location: queryData.location,
+      date: queryData.date,
+      time: queryData.time
     }
 
-    const data = await response.json()
-    
-    console.log('✅ Respuesta recibida correctamente')
-    
-    return data
+    // 1) Intento principal: POST
+    let response
+    let data
+    try {
+      response = await fetch(`${API_BASE_URL}/api/clima/?format=json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      if (!response.ok) {
+        throw new Error(`POST status ${response.status}`)
+      }
+      data = await response.json()
+      console.log('✅ Respuesta POST recibida:', data)
+    } catch (postError) {
+      console.warn('⚠️ POST falló o no devolvió 2xx:', postError.message)
+      console.warn('↪️ Reintentando con GET...')
+      // 2) Fallback: GET con query params (por si el backend espera GET)
+      const params = new URLSearchParams(payload).toString()
+      const getResp = await fetch(`${API_BASE_URL}/api/clima/?format=json&${params}`)
+      if (!getResp.ok) {
+        throw new Error(`GET fallback status ${getResp.status}`)
+      }
+      data = await getResp.json()
+      console.log('✅ Respuesta GET recibida:', data)
+    }
+
+    const normalized = normalizeBackendResponse(data)
+    if (!normalized) {
+      throw new Error('Formato de respuesta vacío o inválido')
+    }
+    // Validación mínima
+    if (!normalized.predicted) {
+      console.warn('⚠️ Respuesta sin campo predicted. Respuesta completa:', normalized)
+    }
+    console.log('🧪 Datos normalizados:', normalized)
+    return normalized
   } catch (error) {
     console.error('❌ Error de conexión:', error.message)
     
     // Crear mensaje de error genérico
-    const userError = new Error('No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet e intenta nuevamente.')
+    const userError = new Error('No se pudo conectar o procesar la respuesta del servidor. Verifica la consola para más detalles.')
     userError.originalError = error
     
     throw userError

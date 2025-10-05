@@ -39,6 +39,7 @@ function App() {
   const locationRef = useRef(null)
   const submitRef = useRef(null)
   const resultsRef = useRef(null)
+  const autoScrollDoneRef = useRef(false)
 
   useEffect(() => {
     // Configurar Lenis con scroll suave cinematográfico
@@ -150,11 +151,10 @@ function App() {
       console.log('⏰ Hora:', queryData.time)
       console.log('═══════════════════════════════════════')
 
-      const response = await submitWeatherQuery(queryData)
-      
-      console.log('✅ Respuesta recibida')
-      
-      setResult(response)
+  const response = await submitWeatherQuery(queryData)
+  console.log('✅ Respuesta recibida (normalizada) ->', response)
+  setResult(response)
+  autoScrollDoneRef.current = false // permitir scroll nuevamente
       
       // Guardar en historial
       saveToHistory(queryData, response)
@@ -167,6 +167,24 @@ function App() {
       setIsSubmitting(false)
     }
   }
+
+  // Autoscroll suave hacia panel de resultados cuando llegan los datos
+  useEffect(() => {
+    if (result && resultsRef.current && !autoScrollDoneRef.current) {
+      // pequeño delay para asegurar layout
+      setTimeout(() => {
+        resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        autoScrollDoneRef.current = true
+      }, 150)
+    }
+  }, [result])
+
+  // Debug: loggear cambios de error
+  useEffect(() => {
+    if (error) {
+      console.log('🚫 Error actualizado:', error)
+    }
+  }, [error])
 
   return (
     <div className="bg-orange-50 dark:bg-gray-900 text-gray-900 dark:text-white relative overflow-hidden transition-colors duration-300">

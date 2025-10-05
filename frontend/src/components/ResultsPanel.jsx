@@ -111,6 +111,8 @@ function ResultsPanel({ result, isLoading, error }) {
 
   // Mostrar resultados - Adaptado al formato real del backend
   const data = displayResult
+  const hasPredicted = !!data?.predicted
+  const debugKeys = data ? Object.keys(data) : []
 
   const scrollToDateSection = () => {
     const dateSection = document.getElementById('date-time-section')
@@ -261,6 +263,18 @@ function ResultsPanel({ result, isLoading, error }) {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Bloque de Depuración si falta predicted */}
+      {!hasPredicted && (
+        <div className="relative border-2 border-yellow-400 dark:border-yellow-500/40 p-6 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 font-mono text-sm" style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-yellow-500"></div>
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-yellow-500"></div>
+          <p className="font-bold mb-2">⚠️ Depuración: Falta el campo predicted</p>
+          <p className="mb-2">Claves recibidas: {debugKeys.join(', ') || 'ninguna'}</p>
+          <pre className="overflow-auto max-h-60 p-3 bg-yellow-100 dark:bg-yellow-800/30 border border-yellow-500/30 rounded">{JSON.stringify(data, null, 2)}</pre>
+          <p className="mt-2 italic">Verifica que el backend devuelva un objeto con 'predicted' o renombra en el normalizador.</p>
         </div>
       )}
 
