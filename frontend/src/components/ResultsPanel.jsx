@@ -354,13 +354,6 @@ function ResultsPanel({ result, isLoading, error }) {
           </div>
 
           {/* Advertencia de errores externos si existen */}
-          {data.externalErrors && (
-            <div className="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-500/50 rounded">
-              <p className="text-yellow-800 dark:text-yellow-400 text-sm font-mono">
-                ⚠️ {data.externalErrors}
-              </p>
-            </div>
-          )}
         </div>
       )}
 
