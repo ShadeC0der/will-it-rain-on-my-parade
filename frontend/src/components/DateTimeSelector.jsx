@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLanguage } from '../context/LanguageContext'
 
 function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSelectedHour }) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   
   // State para el selector de 12 horas
   const [hour12, setHour12] = useState('10')
@@ -76,7 +76,7 @@ function DateTimeSelector({ selectedDate, setSelectedDate, selectedHour, setSele
           
           {selectedDate && (
             <div className="mt-3 text-base text-orange-700 dark:text-cyan-300 font-mono font-semibold">
-              ✓ {new Date(selectedDate + 'T00:00:00').toLocaleDateString('es-ES', { 
+              ✓ {new Date(selectedDate + 'T00:00:00').toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 

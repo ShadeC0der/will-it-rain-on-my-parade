@@ -317,20 +317,20 @@ function App() {
                   <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-purple-500 dark:border-purple-500"></div>
                   
                   <h3 className="text-2xl font-bold text-purple-700 dark:text-purple-400 mb-6 uppercase tracking-wide font-mono">
-                    // Resumen de Consulta
+                    // {t('querySummary')}
                   </h3>
                   
                   <div className="space-y-4 font-mono">
                     <div className="flex items-center gap-3">
-                      <span className="text-orange-700 dark:text-cyan-400">📅 Fecha:</span>
+                      <span className="text-orange-700 dark:text-cyan-400">📅 {t('date')}:</span>
                       <span className="text-gray-900 dark:text-white font-bold">{selectedDate}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-red-700 dark:text-pink-500">⏰ Hora:</span>
+                      <span className="text-red-700 dark:text-pink-500">⏰ {t('time')}:</span>
                       <span className="text-gray-900 dark:text-white font-bold">{selectedHour}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-purple-700 dark:text-purple-400">📍 Ubicación:</span>
+                      <span className="text-purple-700 dark:text-purple-400">📍 {t('location')}:</span>
                       <span className="text-gray-900 dark:text-white font-bold">{location}</span>
                     </div>
                   </div>
