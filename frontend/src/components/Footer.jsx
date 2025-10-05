@@ -1,5 +1,5 @@
 import { useLanguage } from '../context/LanguageContext'
-import { Users, Github, Award } from 'lucide-react'
+import { Users, Award } from 'lucide-react'
 
 function Footer() {
   const { t } = useLanguage()
@@ -130,16 +130,6 @@ function Footer() {
               </p>
             </div>
             
-            <div className="flex items-center gap-4">
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-3 bg-orange-100 dark:bg-gray-800 hover:bg-orange-200 dark:hover:bg-gray-700 border border-orange-400 dark:border-gray-600 hover:border-orange-600 dark:hover:border-cyan-400 rounded-lg transition-all group"
-              >
-                <Github className="w-6 h-6 text-orange-700 dark:text-gray-400 group-hover:text-orange-800 dark:group-hover:text-cyan-400 transition-colors" />
-              </a>
-            </div>
           </div>
           
           <div className="mt-8 text-center">
