@@ -14,11 +14,11 @@ import {
 } from 'lucide-react'
 
 function ResultsPanel({ result, isLoading, error }) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [selectedHistoryItem, setSelectedHistoryItem] = useState(null)
   
   // Determinar qué resultado mostrar: el actual o uno del historial
-  const displayResult = selectedHistoryItem || result
+  const displayResult = selectedHistoryItem ? selectedHistoryItem.result : result
   const isFromHistory = !!selectedHistoryItem
 
   if (isLoading) {
@@ -93,7 +93,7 @@ function ResultsPanel({ result, isLoading, error }) {
         </div>
 
         {/* Historial de Consultas */}
-        <HistoryPanel onSelectHistory={(item) => setSelectedHistoryItem(item.result)} />
+        <HistoryPanel onSelectHistory={(item) => setSelectedHistoryItem(item)} />
 
         <div className="relative border-2 border-gray-400 dark:border-gray-600/30 p-12 bg-white dark:bg-gray-800/50 shadow-lg dark:shadow-none backdrop-blur-sm text-center"
              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)' }}>
@@ -130,6 +130,9 @@ function ResultsPanel({ result, isLoading, error }) {
     veryUncomfortable: { es: 'Muy Incómodo', en: 'Very Uncomfortable', icon: '😰', color: 'orange' }
   }
 
+  // Obtener nombre según idioma actual
+  const getCategoryName = (category) => categoryNames[category]?.[language] || category
+
   // Validar que predicted tenga valores válidos
   const validatePredicted = (predicted) => {
     if (!predicted || typeof predicted !== 'object') return false
@@ -151,9 +154,9 @@ function ResultsPanel({ result, isLoading, error }) {
 
   const hasPredictedData = data?.predicted && validatePredicted(data.predicted)
 
-  // Generar recomendaciones basadas en los datos reales del backend
+  // Generar recomendaciones basadas en los datos reales del backend (con idioma)
   const analysisResult = hasPredictedData
-    ? generateRecommendations(data.predicted, data.query)
+    ? generateRecommendations(data.predicted, data.query, language)
     : { riskLevel: 'low', recommendations: [], summary: '' }
 
   const riskLevel = analysisResult.riskLevel
@@ -216,7 +219,7 @@ function ResultsPanel({ result, isLoading, error }) {
       )}
       
       {/* Historial de Consultas */}
-      <HistoryPanel onSelectHistory={(item) => setSelectedHistoryItem(item.result)} />
+      <HistoryPanel onSelectHistory={(item) => setSelectedHistoryItem(item)} />
       
       <div className="text-center space-y-4">
         <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-700 to-red-700 dark:from-cyan-400 dark:to-pink-500 uppercase tracking-tight mb-2 drop-shadow-md"
@@ -244,7 +247,7 @@ function ResultsPanel({ result, isLoading, error }) {
                 : 'bg-green-500/20 text-green-400 border border-green-500/50'
             }`}>
               {categoryNames[dominantCondition.category]?.icon} 
-              {(dominantCondition.probability * 100).toFixed(1)}% {categoryNames[dominantCondition.category]?.es}
+              {(dominantCondition.probability * 100).toFixed(1)}% {getCategoryName(dominantCondition.category)}
               {riskLevel === 'high' && <AlertTriangle className="w-6 h-6" />}
               {riskLevel === 'medium' && <Zap className="w-6 h-6" />}
               {riskLevel === 'low' && <CheckCircle className="w-6 h-6" />}
@@ -284,7 +287,7 @@ function ResultsPanel({ result, isLoading, error }) {
                   <div className="flex justify-between items-center">
                     <span className="font-mono text-sm text-gray-700 dark:text-gray-300 font-semibold flex items-center gap-2">
                       <span className="text-2xl">{categoryNames[category]?.icon}</span>
-                      {categoryNames[category]?.es}
+                      {getCategoryName(category)}
                     </span>
                     <span className={`font-mono font-bold ${
                       displayProb >= 0.7 ? 'text-red-600 dark:text-red-400' :
@@ -331,19 +334,19 @@ function ResultsPanel({ result, isLoading, error }) {
           <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-purple-500 dark:border-purple-500"></div>
           
           <h3 className="text-xl font-bold text-purple-700 dark:text-purple-400 mb-4 uppercase tracking-wide font-mono">
-            // Detalles de la Consulta
+            // {t('queryDetails')}
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-sm">
             <div className="bg-orange-50 dark:bg-gray-900/50 border-2 border-orange-300 dark:border-cyan-500/20 p-3 rounded shadow-sm dark:shadow-none">
               <div className="text-gray-700 dark:text-gray-300 text-xs uppercase tracking-wider mb-1 font-semibold">
-                📅 Fecha Objetivo
+                📅 {t('targetDate')}
               </div>
               <div className="text-gray-900 dark:text-white font-bold text-lg">{data.query.targetDate}</div>
             </div>
             <div className="bg-orange-50 dark:bg-gray-900/50 border-2 border-orange-300 dark:border-cyan-500/20 p-3 rounded shadow-sm dark:shadow-none">
               <div className="text-gray-700 dark:text-gray-300 text-xs uppercase tracking-wider mb-1 font-semibold">
-                📊 Brier Score Promedio
+                📊 {t('meanBrierScore')}
               </div>
               <div className="text-gray-900 dark:text-white font-bold text-lg">
                 {data.meanBrierScore !== null && data.meanBrierScore !== undefined 

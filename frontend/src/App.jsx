@@ -24,7 +24,7 @@ import Footer from './components/Footer'
 import ThemeToggle from './components/ThemeToggle'
 
 function App() {
-  const { language, toggleLanguage } = useLanguage()
+  const { language, toggleLanguage, t } = useLanguage()
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedHour, setSelectedHour] = useState('')
   const [location, setLocation] = useState('')
@@ -130,7 +130,7 @@ function App() {
 
   const handleSubmitQuery = async () => {
     if (!selectedDate || !selectedHour || !location) {
-      alert('Por favor completa todos los campos')
+      alert(t('pleaseCompleteAllFields'))
       return
     }
 
@@ -348,17 +348,17 @@ function App() {
               {isSubmitting ? (
                 <>
                   <span className="mr-3">⏳</span>
-                  Enviando consulta...
+                  {t('sendingQuery')}
                 </>
               ) : !selectedDate || !selectedHour || !location ? (
                 <>
                   <span className="mr-3">⚠️</span>
-                  Completa todos los campos
+                  {t('completeAllFields')}
                 </>
               ) : (
                 <>
                   <span className="mr-3">🚀</span>
-                  Enviar Consulta
+                  {t('submitQuery')}
                 </>
               )}
             </button>
