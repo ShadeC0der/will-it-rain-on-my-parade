@@ -78,7 +78,7 @@ Desarrollado para NASA Space Apps Challenge 2025.
 | Integrante | Rol |
 |------------|-----|
 | Christian Gutiérrez ([@ShadeC0der](https://github.com/ShadeC0der)) | Frontend |
-| Bastian Ojeda ([@zzonleee](https://github.com/zzonleee)) | Backend |
+| Bastian Ojeda ([@zzonle](https://github.com/zzonle)) | Backend |
 | Carla Barría ([@carlabdiaz](https://github.com/carlabdiaz)) | Backend |
-| Nicolás Bahamonde ([@0xbbanshee](https://github.com/0xbbanshee)) | Testing |
+| Nicolás Bahamonde ([@bbnadev](https://github.com/bbnadev)) | Testing |
 | Benjamín Sánchez ([@benjobas](https://github.com/benjobas)) | Data Analysis |
