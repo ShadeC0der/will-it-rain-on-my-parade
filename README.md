@@ -25,7 +25,7 @@ Este repositorio contiene el **frontend** del proyecto. El desarrollo está dist
 | Parte | Repositorio |
 |-------|-------------|
 | Frontend (este repo) | [ShadeC0der/will-it-rain-on-my-parade](https://github.com/ShadeC0der/will-it-rain-on-my-parade) |
-| Backend | _próximamente_ |
+| Backend | [zzonle/will_it_rain](https://github.com/zzonle/will_it_rain) |
 | Data Analysis | [benjobas/nasa-private](https://github.com/benjobas/nasa-private/tree/main/backend) |
 
 ---
