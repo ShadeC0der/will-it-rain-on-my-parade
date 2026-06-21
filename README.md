@@ -20,11 +20,12 @@ Sistema de predicción climática basado en datos satelitales NASA y Open Data, 
 
 ## Sobre este repositorio
 
-Este repositorio contiene el **frontend**, desarrollado íntegramente por [@ShadeC0der](https://github.com/ShadeC0der). El backend (Django + análisis de datos NASA) vive en un repositorio separado del equipo.
+Este repositorio contiene el **frontend** del proyecto. El desarrollo está distribuido en tres repositorios:
 
 | Parte | Repositorio |
 |-------|-------------|
 | Frontend (este repo) | [ShadeC0der/will-it-rain-on-my-parade](https://github.com/ShadeC0der/will-it-rain-on-my-parade) |
+| Backend | _próximamente_ |
 | Data Analysis | [benjobas/nasa-private](https://github.com/benjobas/nasa-private/tree/main/backend) |
 
 ---
