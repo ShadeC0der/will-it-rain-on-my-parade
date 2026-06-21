@@ -25,7 +25,7 @@ Este repositorio contiene el **frontend**, desarrollado íntegramente por [@Shad
 | Parte | Repositorio |
 |-------|-------------|
 | Frontend (este repo) | [ShadeC0der/will-it-rain-on-my-parade](https://github.com/ShadeC0der/will-it-rain-on-my-parade) |
-| Backend | [benjobas/nasa-private](https://github.com/benjobas/nasa-private/tree/main/backend) |
+| Modelo de predicción | [benjobas/nasa-private](https://github.com/benjobas/nasa-private/tree/main/backend) |
 
 ---
 
@@ -78,7 +78,7 @@ Desarrollado para NASA Space Apps Challenge 2025.
 | Integrante | Rol |
 |------------|-----|
 | Christian Gutiérrez ([@ShadeC0der](https://github.com/ShadeC0der)) | Frontend |
-| Bastian Ojeda ([@zzonleee](https://github.com/zzonleee)) | Backend |
-| Carla Barría ([@carlabdiaz](https://github.com/carlabdiaz)) | Backend |
+| Bastian Ojeda ([@zzonleee](https://github.com/zzonleee)) | Modelo de predicción |
+| Carla Barría ([@carlabdiaz](https://github.com/carlabdiaz)) | Modelo de predicción |
 | Nicolás Bahamonde ([@0xbbanshee](https://github.com/0xbbanshee)) | Testing |
 | Benjamín Sánchez ([@benjobas](https://github.com/benjobas)) | Data Analysis |
